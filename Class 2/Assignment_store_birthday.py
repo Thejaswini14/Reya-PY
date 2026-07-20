@@ -1,0 +1,10 @@
+print("Hi My name is reya and i would like Store my Friends Birthday")
+Aditri=("02/09/2015")
+Sana=("f2")
+Aysha=("f3")
+Aaruni=("f4")
+Ishani=("f5")
+Devitha=("f6")
+
+#Aditri=input("Aditri")
+print("Aditris Birthday date is = ",Aditri)
