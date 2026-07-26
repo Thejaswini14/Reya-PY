@@ -47,7 +47,7 @@ else:
 print("")
 print("Daily activity check complete!")
  
-# PART 10: Print the final activity summary
+
 print("===== DAILY ACTIVITY PLANNER =====")
 print("Temperature:", temperature)
 print("Activity Chosen:", activity)
