@@ -3,18 +3,12 @@ original_count = total_homework
 print("how many homeworks do you have to complete today?")
 complete_count = 0 
 task_num = 1
-while task_num <= total_homework:
-    if task_num == 1:       
+
 
  
 
-total_homework  = 4
-original_count = total_homework
-print(f"You have {original_count} homework tasks to finish today!\n")
- 
 
-completed_count = 0
-task_num = 1
+
  
 
 while task_num <= total_homework:

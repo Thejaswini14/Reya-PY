@@ -27,8 +27,24 @@ while chore_num <= total_chores:
         current_chore = "put clothes for washing"
     else: 
         current_chore = "clean your room"
-    answer =input("have you finished your current chore")
+    answer =input(f"have you finished your current chore: {current_chore}? (yes/no) ")
     if answer == "yes":
         completed_count = completed_count + 1 
         chore_num += 1 
+        print("great job! chore completed")
+    else:
+        print("okay, finish it and check again")
+    print("total chores remaining", total_chores - completed_count)
+print("all chores completed")
+
+
+
+number = 0
+safety_counter = 0
+while number <= 0:
+    print("this condition never changes, so this would run forever")
+    safety_counter += 1
+    if safety_counter == 3:
+        print("stopping here on purpose - a real infinite loop never stops on its own")
+        break
     
