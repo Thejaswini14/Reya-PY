@@ -26,7 +26,8 @@ while billing:
     customers_served += 1
 
    
-
+for i in range(3):
+    print("\n--- Billing Summary ---")
 
     print(f"Total customers served: {customers_served}")
     print(f"Total sales amount: ${total_sales:.2f}")
