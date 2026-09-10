@@ -10,7 +10,7 @@ class PetProfile:
         self.age = age
         self.favourite_food = favourite_food
 pet1 = PetProfile("Biscuts", "Dog", 5, "treats")
-pet2 = PetProfile("Mimi", "Cat", 4, "Fish")
+pet2: PetProfile[str, str, int, str] = PetProfile("Mimi", "Cat", 4, "Fish")
 print("Biscuts is a {}".format(pet1.category))
 print("Mimi is also a {}".format(pet2.category))
 print("{} is a {} and is {} years old.".format(pet1.name, pet1.animal_type, pet1.age))
