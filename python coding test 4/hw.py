@@ -1,81 +1,167 @@
-# ── BOOK CLASS ───────────────────────────────────────────────── 
-# TODO: Define a class called Book
-class Book:
-    # TODO: Define __init__(self, title, author)
-    # Set up three attributes:
-    # self.title = title
-    # self.author = author
-    # self.is_borrowed = False  ← starts as not borrowed
-    def __init__(self, title, author):
-        self.title = title
-        self.author = author
-        self.is_borrowed = False
-
-    # TODO: Define borrow(self)
-    # If self.is_borrowed is already True → print that it's already borrowed
-    # Otherwise → set self.is_borrowed = True and print a borrow message
-    def borrow(self):
-        if self.is_borrowed:
-            print(f"Sorry, '{self.title}' is already borrowed.")
-        else:
-            self.is_borrowed = True
-            print(f"You have successfully borrowed '{self.title}'.")
-
-    # TODO: Define return_book(self)
-    # If self.is_borrowed is False → print that it wasn't borrowed
-    # Otherwise → set self.is_borrowed = False and print a return message
-    def return_book(self):
-        if not self.is_borrowed:
-            print(f"Error: '{self.title}' was never borrowed.")
-        else:
-            self.is_borrowed = False
-            print(f"Thank you for returning '{self.title}'.")
-
-    # TODO: Define __str__(self)
-    # Return a string like: "Title by Author [Available]"
-    # or "Title by Author [Borrowed]"
-    def __str__(self):
-        status = "Borrowed" if self.is_borrowed else "Available"
-        return f"'{self.title}' by {self.author} [{status}]"
-
-
-# ── LIBRARY ──────────────────────────────────────────────────── 
-# TODO: Create at least 3 Book objects with different titles and authors
-book1 = Book("Python Crash Course", "Eric Matthes")
-book2 = Book("The Hobbit", "J.R.R. Tolkien")
-book3 = Book("To Kill a Mockingbird", "Harper Lee")
-
-print("=" * 42)
-print(" 📚 LIBRARY SYSTEM")
-print("=" * 42)
-
-# TODO: Print each book (uses __str__ automatically)
-print("\n--- Initial Catalog Status ---")
-print(book1)
-print(book2)
-print(book3)
-
-# TODO: Borrow some books using .borrow()
-print("\n--- Borrowing Books ---")
-book1.borrow()
-book2.borrow()
-
-# TODO: Try to borrow the same book twice to test the guard message
-print("\n--- Testing Double Borrow Guard ---")
-book1.borrow()
-
-# TODO: Return a book using .return_book()
-print("\n--- Returning Books ---")
-book1.return_book()
-
-# TODO: Try to return a book that was never borrowed to test that guard
-print("\n--- Testing Unborrowed Return Guard ---")
-book3.return_book()
-
-# TODO: Print each book again to show updated status
-print("\n--- Updated Catalog Status ---")
-print(book1)
-print(book2)
-print(book3)
-
-
+# Smart Traffic Signal Simulator
+ 
+# Import necessary libraries
+import pygame
+import random
+ 
+# Initialize Pygame
+pygame.init()
+ 
+# Custom event IDs
+CAR_COLOR_CHANGE_EVENT = pygame.USEREVENT + 1
+SIGNAL_CHANGE_EVENT = pygame.USEREVENT + 2
+ 
+# Define colours
+ROAD = pygame.Color("darkgray")
+WHITE = pygame.Color("white")
+YELLOW = pygame.Color("yellow")
+BLUE = pygame.Color("blue")
+ORANGE = pygame.Color("orange")
+ 
+RED = pygame.Color("red")
+GREEN = pygame.Color("green")
+ 
+ 
+# Create a Car sprite class
+class Car(pygame.sprite.Sprite):
+ 
+    # Constructor method
+    def __init__(self, color, width, height):
+        # Call the parent Sprite constructor
+        super().__init__()
+ 
+        # Give the car an image
+        self.image = pygame.Surface([width, height])
+        self.image.fill(color)
+ 
+        # Give the car a rectangular position
+        self.rect = self.image.get_rect()
+ 
+        # Give the car a horizontal velocity
+        self.velocity = [3, 0]
+ 
+    # Update the car's position
+    def update(self):
+        # Move the car using its velocity
+        self.rect.move_ip(self.velocity)
+ 
+        sensor_triggered = False
+ 
+        # Check whether the car reaches either road boundary
+        if self.rect.left <= 0 or self.rect.right >= 600:
+            # Reverse the car's direction
+            self.velocity[0] = -self.velocity[0]
+ 
+            sensor_triggered = True
+ 
+        # Post custom events when a boundary sensor is triggered
+        if sensor_triggered:
+            pygame.event.post(
+                pygame.event.Event(CAR_COLOR_CHANGE_EVENT)
+            )
+ 
+            pygame.event.post(
+                pygame.event.Event(SIGNAL_CHANGE_EVENT)
+            )
+ 
+    # Change the car's colour
+    def change_color(self):
+        self.image.fill(
+            random.choice([WHITE, YELLOW, BLUE, ORANGE])
+        )
+ 
+ 
+# Function to change the traffic signal
+def change_signal():
+    global signal_color
+ 
+    # Switch between red and green
+    if signal_color == RED:
+        signal_color = GREEN
+    else:
+        signal_color = RED
+ 
+ 
+# Create a sprite group
+all_sprites = pygame.sprite.Group()
+ 
+# Create the car sprite
+car = Car(WHITE, 70, 35)
+ 
+# Position the car on the road
+car.rect.x = 50
+car.rect.y = 300
+ 
+# Add the car to the sprite group
+all_sprites.add(car)
+ 
+# Create the game window
+screen = pygame.display.set_mode((600, 400))
+pygame.display.set_caption("Smart Traffic Signal Simulator")
+ 
+# Set the starting signal colour
+signal_color = RED
+ 
+# Create a clock to control the frame rate
+clock = pygame.time.Clock()
+ 
+# Control the game loop
+running = True
+ 
+while running:
+ 
+    # Handle events
+    for event in pygame.event.get():
+ 
+        # Close the application
+        if event.type == pygame.QUIT:
+            running = False
+ 
+        # Handle the custom car colour event
+        elif event.type == CAR_COLOR_CHANGE_EVENT:
+            car.change_color()
+ 
+        # Handle the custom traffic signal event
+        elif event.type == SIGNAL_CHANGE_EVENT:
+            change_signal()
+ 
+    # Update all sprites in the group
+    all_sprites.update()
+ 
+    # Draw the road background
+    screen.fill(ROAD)
+ 
+    # Draw road divider lines
+    for x in range(0, 600, 80):
+        pygame.draw.rect(
+            screen,
+            WHITE,
+            (x, 345, 45, 5)
+        )
+ 
+    # Draw the traffic-signal box
+    pygame.draw.rect(
+        screen,
+        pygame.Color("black"),
+        (275, 40, 50, 90)
+    )
+ 
+    # Draw the active traffic-signal light
+    pygame.draw.circle(
+        screen,
+        signal_color,
+        (300, 85),
+        20
+    )
+ 
+    # Draw all sprites
+    all_sprites.draw(screen)
+ 
+    # Refresh the display
+    pygame.display.flip()
+ 
+    # Limit the frame rate
+    clock.tick(60)
+ 
+# Close Pygame
+pygame.quit()
